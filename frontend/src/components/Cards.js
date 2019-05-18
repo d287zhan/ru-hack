@@ -17,7 +17,9 @@ import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import axios from 'axios';
-
+import TextField from "@material-ui/core/TextField";
+import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
+import Grid from '@material-ui/core/Grid';
 
 
 const styles = theme => ({
@@ -42,7 +44,7 @@ const styles = theme => ({
     transform: 'rotate(180deg)',
   },
   avatar: {
-    backgroundColor: red[500],
+    backgroundColor: "#B22222",
   },
   upvote: {
 
@@ -58,15 +60,23 @@ const styles = theme => ({
   },
   votes:{
     marginLeft: '10%',
-  }
+  },
+    textField: {
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
+  },
+  icon: {
+    margin: theme.spacing.unit,
+    fontSize: 32,
+  },
 });
 
 class RecipeReviewCard extends React.Component {
   state = { 
     expanded: false,
     voted: false,
-    like: false,
-    dislike: false,
+    like: null,
+    dislike: null,
   };
 
   handleExpandClick = () => {
@@ -93,51 +103,82 @@ class RecipeReviewCard extends React.Component {
   }
 
   handleUpVote = () => {
+    if(this.state.like != null && this.state.like){
+      this.props.story.story_likes-=1;
+    }else if(this.state.dislike && !this.state.like){
+      this.props.story.story_likes+=1;
+      this.props.story.story_dislikes-=1;
+    }else if(this.state.like == null || this.state.dislike || !this.state.like){
+      this.props.story.story_likes+=1;
+    }
     this.setState(state => ({
       expanded: state.expanded,
-      voted: true,
-      like: true,
+      voted: state.like || state.dislike,
+      like: !state.like,
       dislike: false,
     }));
-    this.props.story.story_likes+=1;
     this.handleVote();
   };
 
   handleDownVote = () => {
+    if(this.state.dislike != null && this.state.dislike){
+      this.props.story.story_dislikes-=1;
+    }else if(this.state.like && !this.state.dislike){
+      this.props.story.story_dislikes+=1;
+      this.props.story.story_likes-=1;
+    }else if(this.state.dislike == null || this.state.like || !this.state.dislike){
+      this.props.story.story_dislikes+=1;
+    }
     this.setState(state => ({
       expanded: state.expanded,
-      voted: true,
+      voted: state.like || state.dislike,
       like: false,
-      dislike: true
+      dislike: !state.dislike,
     }));
-    this.props.story.story_dislikes+=1;
     this.handleVote();
   }
+
+  handleDelete = () => {
+    axios.post('http://localhost:4000/stories/delete/'+this.props.story._id)
+    .then(res => console.log(res.data));
+    window.location.reload();
+  }
+
 
   render() {
     const { classes } = this.props;
     console.log(this.props.story.story_title);
     return (
       <Card className={classes.card}>
-        <CardHeader
-          avatar={
-            <Avatar aria-label="Name" className={classes.avatar}>
-              N
-            </Avatar>
-          }
-          // action={
-          //   <IconButton>
-          //     <MoreVertIcon />
-          //   </IconButton>
-          // }
-          title= {this.props.story.story_title}
-          subheader={this.props.story.story_author}
-        />
-        <CardMedia
+        <div>
+            <Grid container spacing = {12}>
+              <Grid item xs={11}>
+                <CardHeader
+                  avatar={
+                    <Avatar aria-label="Name" className={classes.avatar}>
+                      {this.props.story.story_author.substring(0,1).toUpperCase()}
+                    </Avatar>
+                  }
+                  // action={
+                  //   <IconButton>
+                  //     <MoreVertIcon />
+                  //   </IconButton>
+                  // }
+                  title= {this.props.story.story_title}
+                  subheader={this.props.story.story_author}
+                />
+              </Grid>
+              <Grid item xs={1}>
+                <DeleteOutlinedIcon onClick={this.handleDelete} className={classes.icon} />
+              </Grid>
+            </Grid>
+        </div>
+
+        {/* <CardMedia
           className={classes.media}
           image="/static/images/cards/paella.jpg"
           title="Insert Title"
-        />
+        /> */}
         <CardActions className={classes.actions} disableActionSpacing>
           <IconButton className={classnames(classes.upvote, {[classes.upvoted]: this.state.like,})}
             onClick={this.handleUpVote} aria-label="Thumbs Up"
@@ -166,9 +207,8 @@ class RecipeReviewCard extends React.Component {
         <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
           <CardContent>
             {/* <Typography paragraph>Topic Description:</Typography> */}
-            <Typography paragraph>
-              {this.props.story.story_description} 
-            </Typography>
+            <TextField  disabled='true' multiline='true' style={{width: '90%'}} id="outlined-description" label="Description" className={classes.textField} 
+                        margin="normal" variant="outlined" value={this.props.story.story_description} />
           </CardContent>
         </Collapse>
       </Card>

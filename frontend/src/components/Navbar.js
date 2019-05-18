@@ -6,7 +6,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Logo from './bmo-logo.png';
-
+import { Link } from "react-router-dom";
 
 const styles = {
   root: {
@@ -19,6 +19,13 @@ const styles = {
     marginLeft: -12,
     marginRight: 20,
   },
+  title: {
+    marginLeft: 15,
+  },
+  navButton: {
+    textDecoration: 'none',
+    color: "#FFFFFF",
+  },
 };
 
 function Navbar(props) {
@@ -28,16 +35,27 @@ function Navbar(props) {
       <AppBar position="static">
         <Toolbar>
           <img src = {Logo} alt = "logo" />
+          <Typography variant = "h5" color = "inherit" className={classes.title}>
+            BMO Community         
+        </Typography>
           <Typography variant = "h5" color = "inherit" className = {classes.grow}>
                                 
           </Typography>
-          <Typography variant="h2" color="inherit" className={classes.grow}>
+          {/* <Typography variant="h2" color="inherit" className={classes.grow}>
             BMO FORUM
-          </Typography>
-          <Button color = "inherit"> Add Card</Button>
-          <Button color = "inherit">Client</Button>
-          <Button color = "inherit">Employees</Button>
-          <Button color="inherit">Login</Button>
+          </Typography> */}
+          <Link to="/" className={classes.navButton}>
+            <Button color = "inherit"> Home </Button>
+          </Link>
+          <Link to="/stories" className={classes.navButton}>
+            <Button color = "inherit"> Community </Button>
+          </Link>
+          <Link to="/addstory" className={classes.navButton}>
+            <Button color = "inherit"> Add Suggestion </Button>
+          </Link>
+          <Link to="/login" className={classes.navButton}>
+            <Button color="inherit"> Login </Button>
+          </Link>
         </Toolbar>
       </AppBar>
     </div>

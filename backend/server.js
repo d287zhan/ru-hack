@@ -5,6 +5,7 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const storyRoutes = express.Router();
 const PORT = 4000;
+mongo = require('mongodb')
 
 let Story = require('./story.model');
 
@@ -66,6 +67,13 @@ storyRoutes.route('/add').post(function(req, res) {
             res.status(400).send('adding new story failed');
         });
 });
+
+storyRoutes.route('/delete/:id').post(function(req, res){
+    Story.deleteOne({_id: mongo.ObjectID( req.params.id)}, (err, results)=>{
+        if (err) res.status(400).send('removing new story failed');
+        res.status(200).json({'story': 'story delete successfully'});
+    })
+})
 
 app.use('/stories', storyRoutes);
 
