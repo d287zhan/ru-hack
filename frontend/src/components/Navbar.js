@@ -5,8 +5,8 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
+import Logo from './bmo-logo.png';
+
 
 const styles = {
   root: {
@@ -27,12 +27,16 @@ function Navbar(props) {
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" color="inherit" className={classes.grow}>
-            News
+          <img src = {Logo} alt = "logo" />
+          <Typography variant = "h5" color = "inherit" className = {classes.grow}>
+                                
           </Typography>
+          <Typography variant="h2" color="inherit" className={classes.grow}>
+            BMO FORUM
+          </Typography>
+          <Button color = "inherit"> Add Card</Button>
+          <Button color = "inherit">Client</Button>
+          <Button color = "inherit">Employees</Button>
           <Button color="inherit">Login</Button>
         </Toolbar>
       </AppBar>
