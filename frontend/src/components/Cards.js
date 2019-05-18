@@ -43,14 +43,36 @@ const styles = theme => ({
   avatar: {
     backgroundColor: red[500],
   },
+  upvote: {
+
+  },
+  upvoted: {
+    color: "#008000",
+  },
 });
 
 class RecipeReviewCard extends React.Component {
-  state = { expanded: false };
+  state = { 
+    expanded: false,
+    voted: false,
+    like: false,
+  };
 
   handleExpandClick = () => {
-    this.setState(state => ({ expanded: !state.expanded }));
+    this.setState(state => ({ 
+      expanded: !state.expanded, 
+      voted: state.voted,
+      like: state.true,
+    }));
   };
+
+  handleUpVote = () => {
+    this.setState(state => ({
+      expanded: state.expanded,
+      voted: true,
+      like: !state.like,
+    }));
+  }
 
   render() {
     const { classes } = this.props;
@@ -77,7 +99,9 @@ class RecipeReviewCard extends React.Component {
           title="Insert Title"
         />
         <CardActions className={classes.actions} disableActionSpacing>
-          <IconButton aria-label="Thumbs Up">
+          <IconButton className={classnames(classes.upvote, {[classes.upvoted]: this.state.like,})}
+            onClick={this.handleUpVote} aria-label="Thumbs Up"
+          >
           <ThumbUpIcon />
           </IconButton>
           <IconButton aria-label="Thumbs Down">
