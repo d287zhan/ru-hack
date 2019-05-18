@@ -36,7 +36,7 @@ storyRoutes.route('/:id').get(function(req, res) {
 });
 
 storyRoutes.route('/update/:id').post(function(req, res) {
-    Todo.findById(req.params.id, function(err, story) {
+    Story.findById(req.params.id, function(err, story) {
         if (!story)
             res.status(404).send("data is not found");
         else

@@ -16,6 +16,7 @@ import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import axios from 'axios';
 
 
 
@@ -49,6 +50,15 @@ const styles = theme => ({
   upvoted: {
     color: "#008000",
   },
+  downvote:{
+
+  },
+  downvoted: {
+    color: "#FF0000"
+  },
+  votes:{
+    marginLeft: '10%',
+  }
 });
 
 class RecipeReviewCard extends React.Component {
@@ -56,27 +66,57 @@ class RecipeReviewCard extends React.Component {
     expanded: false,
     voted: false,
     like: false,
+    dislike: false,
   };
 
   handleExpandClick = () => {
     this.setState(state => ({ 
       expanded: !state.expanded, 
       voted: state.voted,
-      like: state.true,
+      like: state.like,
+      dislike: state.dislike,
     }));
   };
+
+  handleVote(){
+    const obj = {
+      story_title: this.props.story.story_title,
+      story_description: this.props.story.story_description,
+      story_author: this.props.story.story_author,
+      story_date: this.props.story.story_date,
+      story_likes: this.props.story.story_likes,
+      story_dislikes: this.props.story.story_dislikes
+    };
+    console.log(obj);
+    axios.post('http://localhost:4000/stories/update/'+this.props.story._id, obj)
+    .then(res => console.log(res.data));
+  }
 
   handleUpVote = () => {
     this.setState(state => ({
       expanded: state.expanded,
       voted: true,
-      like: !state.like,
+      like: true,
+      dislike: false,
     }));
+    this.props.story.story_likes+=1;
+    this.handleVote();
+  };
+
+  handleDownVote = () => {
+    this.setState(state => ({
+      expanded: state.expanded,
+      voted: true,
+      like: false,
+      dislike: true
+    }));
+    this.props.story.story_dislikes+=1;
+    this.handleVote();
   }
 
   render() {
     const { classes } = this.props;
-
+    console.log(this.props.story.story_title);
     return (
       <Card className={classes.card}>
         <CardHeader
@@ -85,13 +125,13 @@ class RecipeReviewCard extends React.Component {
               N
             </Avatar>
           }
-          action={
-            <IconButton>
-              <MoreVertIcon />
-            </IconButton>
-          }
-          title="Jhon Doe's New Idea"
-          subheader="May 19, 2018"
+          // action={
+          //   <IconButton>
+          //     <MoreVertIcon />
+          //   </IconButton>
+          // }
+          title= {this.props.story.story_title}
+          subheader={this.props.story.story_author}
         />
         <CardMedia
           className={classes.media}
@@ -103,9 +143,14 @@ class RecipeReviewCard extends React.Component {
             onClick={this.handleUpVote} aria-label="Thumbs Up"
           >
           <ThumbUpIcon />
+          <Typography className={classes.votes}> {this.props.story.story_likes} </Typography>
           </IconButton>
-          <IconButton aria-label="Thumbs Down">
+          
+          <IconButton className={classnames(classes.downvote, {[classes.downvoted]: this.state.dislike,})}
+            onClick={this.handleDownVote} aria-label="Thumbs Down"
+          >
             <ThumbDownIcon />
+            <Typography className={classes.votes}> {this.props.story.story_dislikes} </Typography>
           </IconButton>
           <IconButton
             className={classnames(classes.expand, {
@@ -120,9 +165,9 @@ class RecipeReviewCard extends React.Component {
         </CardActions>
         <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
           <CardContent>
-            <Typography paragraph>Topic Description:</Typography>
+            {/* <Typography paragraph>Topic Description:</Typography> */}
             <Typography paragraph>
-              Enter description here ... 
+              {this.props.story.story_description} 
             </Typography>
           </CardContent>
         </Collapse>
