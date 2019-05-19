@@ -2,15 +2,19 @@ const express = require('express');
 var router = express.Router();
 const bodyParser = require('body-parser');
 
+var bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const exjwt = require('express-jwt');
+
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
 const User = require('./User');
 
-router.route('/').get(function(req, res){
-    User.find(function(err, user){
-        if(err){
+router.route('/').get(function (req, res) {
+    User.find(function (err, user) {
+        if (err) {
             res.status(404).send("depression");
-        }else{
+        } else {
             res.json(user);
         }
     });
@@ -19,12 +23,13 @@ router.route('/').get(function(req, res){
 router.route('/add').post((req, res) => {
     User.create({
         email: req.body.email,
+        name: req.body.name,
         password: req.body.password
     },
-    function(err, user) {
-        if(err) return res.status(500).send("There was a problem adding the information to the database");
-        res.status(200).send(user);
-    });
+        function (err, user) {
+            if (err) return res.status(500).send("There was a problem adding the information to the database");
+            res.status(200).send(user);
+        });
 });
 
 // // router.get('/', function (req, res) {
