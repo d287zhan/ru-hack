@@ -26,6 +26,15 @@ const styles = theme => ({
   card: {
     maxWidth: 1500,
   },
+  trashbox: {
+    marginLeft: 50,
+    margin: theme.spacing.unit,
+    fontSize: 32,
+    "&:hover":{
+      backgroundColor: "#D3D3D3",
+    },
+
+  },
   media: {
     height: 0,
     paddingTop: '1%',
@@ -64,10 +73,6 @@ const styles = theme => ({
     textField: {
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
-  },
-  icon: {
-    margin: theme.spacing.unit,
-    fontSize: 32,
   },
 });
 
@@ -169,7 +174,7 @@ class RecipeReviewCard extends React.Component {
                 />
               </Grid>
               <Grid item xs={1}>
-                <DeleteOutlinedIcon onClick={this.handleDelete} className={classes.icon} />
+                <DeleteOutlinedIcon onClick={this.handleDelete} className={classes.trashbox} />
               </Grid>
             </Grid>
         </div>

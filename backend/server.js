@@ -7,6 +7,7 @@ const storyRoutes = express.Router();
 const PORT = 4000;
 mongo = require('mongodb')
 
+const UserController = require('./user/UserController');
 let Story = require('./story.model');
 
 app.use(cors());
@@ -73,9 +74,10 @@ storyRoutes.route('/delete/:id').post(function(req, res){
         if (err) res.status(400).send('removing new story failed');
         res.status(200).json({'story': 'story delete successfully'});
     })
-})
+});
 
 app.use('/stories', storyRoutes);
+app.use('/users', UserController);
 
 app.listen(PORT, function() {
     console.log("Server is running on Port: " + PORT);

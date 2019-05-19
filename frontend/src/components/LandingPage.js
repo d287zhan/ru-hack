@@ -1,6 +1,7 @@
 import React from 'react';
 import bg from './splash.jpg';
 import Paper from '@material-ui/core/Paper';
+import { Typography, Button } from '@material-ui/core';
 
 const styles = {
     paperContainer: {
